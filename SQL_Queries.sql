@@ -1,6 +1,9 @@
 USE OPS
+
+--STEP1
 DROP TABLE IF EXISTS Planecrash -- Step1
 
+--STEP2
 CREATE TABLE Planecrash (			
 			Accident_Date		DATE,
 			Accident_Time		VARCHAR(1000),
@@ -18,7 +21,7 @@ CREATE TABLE Planecrash (
             ground				varchar(1000),
             summary				varchar(5000)
 			)
---Step3
+--STEP3
 insert into planecrash (Accident_Date,Accident_Time,Location,Operator,Flight_No,route,ac_type,registration,cn_ln,ground,passenger_aboard,crew_aboard,passenger_fatalities,crew_fatalities,summary)
 select 
 cast(date as date), 
@@ -125,7 +128,7 @@ end as summary
 from STG_Planecrash 
 
 
---Step4
+--STEP4
 update Planecrash
 set Accident_Time = concat(Accident_Time ,':','00')
 where len(trim(accident_time)) in (4,5)
@@ -164,10 +167,10 @@ set Accident_Time = '13:15:00'
 where Accident_Time = '01315:00'
 
 update Planecrash
-set Passenger_aboard = replace(passenger_aboard,' ','') 
+set Passenger_aboard = replace(passenger_aboard,' ','') 
 
 update Planecrash
-set Crew_aboard = replace(Crew_aboard,' ','') 
+set Crew_aboard = replace(Crew_aboard,' ','') 
 
 select * from Planecrash
 select count(*) as 'Accident Count',datepart(YEAR,accident_date) as Year from Planecrash group by datepart(YEAR,accident_date) order by count(*) desc
@@ -181,9 +184,7 @@ select count(*) as 'Accident Count',route as Time from Planecrash group by route
 
 select count(*) as 'Accident Count',ac_type as Time from Planecrash group by ac_type order by count(*) desc
 
-select sum(cast(replace(passenger_aboard,' ','') as int)),datepart(YEAR,accident_date) as Year from Planecrash group by datepart(YEAR,accident_date) order by 1 desc
+select sum(cast(replace(passenger_aboard,' ','') as int)),datepart(YEAR,accident_date) as Year from Planecrash group by datepart(YEAR,accident_date) order by 1 desc
 
-select sum(cast(replace(Passenger_fatalities,' ','') as int)),datepart(YEAR,accident_date) as Year from Planecrash group by datepart(YEAR,accident_date) order by 1 desc
-
-
+select sum(cast(replace(Passenger_fatalities,' ','') as int)),datepart(YEAR,accident_date) as Year from Planecrash group by datepart(YEAR,accident_date) order by 1 desc
 
